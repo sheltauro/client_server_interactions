@@ -1,9 +1,9 @@
 # Client Server interactions
-This project is implemented in Scala.
+This project is implemented in Java.
 
 
 ## Task Notes
-- [ ] Compile and run scala code locally.
+- [x] Compile and run java code locally.
 - [ ] Implement RPC using TCP.
   - [ ] Implement TCP using protos to pass objects.
   - [ ] Implement method reflection.
