@@ -3,5 +3,9 @@ This project is implemented in Scala.
 
 
 ## Task Notes
-1. [Not Done] Implement RPC using TCP in scala.
+- [ ] Compile and run scala code locally.
+- [ ] Implement RPC using TCP.
+  - [ ] Implement TCP using protos to pass objects.
+  - [ ] Implement method reflection.
+
 
