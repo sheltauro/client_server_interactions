@@ -1,6 +1,6 @@
 package org.example.app;
 
-public enum Status {
+public enum RPCStatus {
     SUCCEEDED,
     FAILED
 }

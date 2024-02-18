@@ -72,7 +72,7 @@ public class RPCUtils {
             RPCRegistry registry = callMethod(methodName, parameters);
             if (registry == null) {
                 return new AsyncResponse(
-                        new RPCResponse(Status.FAILED, 0.0, "Method does not exist")
+                        new RPCResponse(RPCStatus.FAILED, 0.0, "Method does not exist")
                 );
             }
             out.writeObject(registry);

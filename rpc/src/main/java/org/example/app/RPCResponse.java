@@ -1,11 +1,10 @@
 package org.example.app;
 
 import java.io.Serializable;
-import java.util.Optional;
 import java.util.UUID;
 
 public class RPCResponse implements Serializable {
-    private Status status;
+    private RPCStatus status;
 
     private Number response;
 
@@ -14,33 +13,33 @@ public class RPCResponse implements Serializable {
     private UUID uuid;
 
     // Only for testing.
-    public RPCResponse(Status status, Number result) {
+    public RPCResponse(RPCStatus status, Number result) {
         this.status = status;
         this.response = result;
         this.errorMessage = "";
     }
 
-    public RPCResponse(Status status, Number result, UUID uuid) {
+    public RPCResponse(RPCStatus status, Number result, UUID uuid) {
         this.status = status;
         this.response = result;
         this.errorMessage = "";
         this.uuid = uuid;
     }
 
-    public RPCResponse(Status status, Number result, String errorMessage) {
+    public RPCResponse(RPCStatus status, Number result, String errorMessage) {
         this.status = status;
         this.response = result;
         this.errorMessage = errorMessage;
     }
 
-    public RPCResponse(Status status, Number result, String errorMessage, UUID uuid) {
+    public RPCResponse(RPCStatus status, Number result, String errorMessage, UUID uuid) {
         this.status = status;
         this.response = result;
         this.errorMessage = errorMessage;
         this.uuid = uuid;
     }
 
-    public Status getStatus() {
+    public RPCStatus getStatus() {
         return status;
     }
 
@@ -54,6 +53,12 @@ public class RPCResponse implements Serializable {
 
     @Override
     public String toString() {
+        if (status == RPCStatus.FAILED) {
+            return "RPCResponse{" +
+                    "status=" + status +
+                    ", errorMessage='" + errorMessage + '\'' +
+                    '}';
+        }
         return "RPCResponse{" +
                 "status=" + status +
                 ", response=" + response +

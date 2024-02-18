@@ -58,22 +58,22 @@ class RPCRegistry implements Serializable {
     }
 
     static RPCResponse doubled(Number a, UUID uuid) {
-        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() * 2.0, uuid);
+        return new RPCResponse(RPCStatus.SUCCEEDED, a.doubleValue() * 2.0, uuid);
     }
 
     static RPCResponse tripled(Number a, UUID uuid) {
-        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() * 3.0, uuid);
+        return new RPCResponse(RPCStatus.SUCCEEDED, a.doubleValue() * 3.0, uuid);
     }
 
     static RPCResponse halved(Number a, UUID uuid) {
-        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() / 2.0, uuid);
+        return new RPCResponse(RPCStatus.SUCCEEDED, a.doubleValue() / 2.0, uuid);
     }
 
     static RPCResponse add(Number a, Number b, UUID uuid) {
-        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() + b.doubleValue(), uuid);
+        return new RPCResponse(RPCStatus.SUCCEEDED, a.doubleValue() + b.doubleValue(), uuid);
     }
 
     static RPCResponse squareRoot(Number a, UUID uuid) {
-        return new RPCResponse(Status.SUCCEEDED, Math.sqrt(a.doubleValue()), uuid);
+        return new RPCResponse(RPCStatus.SUCCEEDED, Math.sqrt(a.doubleValue()), uuid);
     }
 }

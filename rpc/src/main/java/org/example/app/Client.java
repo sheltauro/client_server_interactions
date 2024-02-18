@@ -3,7 +3,6 @@ package org.example.app;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Client {
 
@@ -43,7 +42,7 @@ public class Client {
             out.flush();
             RPCResponse response = (RPCResponse) in.readObject();
             assert (response.toString().equals(
-                    new RPCResponse(Status.SUCCEEDED, 4.0).toString()));
+                    new RPCResponse(RPCStatus.SUCCEEDED, 4.0).toString()));
             System.out.println("Test 1 passed");
         } catch (Exception e) {
             e.printStackTrace();

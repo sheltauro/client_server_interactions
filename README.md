@@ -1,5 +1,6 @@
 # Client Server interactions
-This project is implemented in Java.
+The RPC module allows you to execute any function on a remote server.
+The result is returned as an AsyncResponse which is similar to a future.
 
 
 ## Task Notes
@@ -11,5 +12,7 @@ This project is implemented in Java.
 - [x] Return all requests with the same (status + result) response.
   - [x] Client should be able to read the status + result.
 - [x] Create a future/callback function.
+
+- [ ] Send heartbeats from client to server, to check if the server is up.
 
 

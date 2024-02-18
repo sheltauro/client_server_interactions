@@ -39,7 +39,7 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                out.writeObject(new RPCResponse(Status.FAILED, 0.0, e.getMessage(), uniqueID));
+                out.writeObject(new RPCResponse(RPCStatus.FAILED, 0.0, e.getMessage(), uniqueID));
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
