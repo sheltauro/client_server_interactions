@@ -7,6 +7,7 @@ This project is implemented in Java.
 - [x] Implement RPC using TCP.
   - [x] Implement TCP using protos to pass objects.
   - [x] Implement method reflection.
-- [ ] Handle multithreading.
+- [x] Handle multithreading.
+- [ ] Return all requests with the same (status + result) response.
 
 

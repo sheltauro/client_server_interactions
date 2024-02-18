@@ -3,6 +3,9 @@ package org.example.app;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public class Server {
 
@@ -19,11 +22,11 @@ public class Server {
         }).start();
     }
 
-    static Double doReflection(RPCRegistry registry) {
+    static void doReflection(RPCRegistry registry, PrintWriter out) {
         double result = 0.0;
         try {
             // Reflection code.
-            Class<?> cls = Class.forName("org.example.app.RunFunction");
+            Class<?> cls = Class.forName("org.example.app.RPCRegistry");
 
             Method method = cls.getDeclaredMethod(registry.getName(), Number.class);
             result = Double.parseDouble(
@@ -31,10 +34,10 @@ public class Server {
                             method.invoke(null, (Number) registry.getParameters().get(0))
                     )
             );
+            out.println(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            out.println("error");
         }
-        return result;
     }
 
     public static void main(String[] args) {
@@ -47,10 +50,27 @@ public class Server {
         ) {
             sendMessagesToClient(stdin, out);
 
-            while (true) {
-                RPCRegistry registry = (RPCRegistry) in.readObject();
-                out.println(doReflection(registry));
-            }
+            // Create a thread pool to handle incoming requests.
+            ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r);
+                    thread.setDaemon(true);
+                    return thread;
+                }
+            });
+
+            executorService.submit(() -> {
+                while (true) {
+                    try {
+                        RPCRegistry registry = (RPCRegistry) in.readObject();
+                        doReflection(registry, out);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        break;
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
