@@ -1,6 +1,8 @@
 package org.example.app;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.UUID;
 
 class RPCRegistry implements Serializable {
     private String rpcName;
@@ -9,16 +11,19 @@ class RPCRegistry implements Serializable {
 
     private Class[] parameterTypes;
 
-    private Object[] parameters;
+    private ArrayList<Object> parameters;
 
     private String returnType;
 
-    RPCRegistry(String rpcName, int numParameters, Class[] parameterTypes, Object[] parameters, String returnType) {
+    private UUID uniqueID;
+
+    RPCRegistry(String rpcName, int numParameters, Class[] parameterTypes, ArrayList<Object> parameters, String returnType) {
         this.rpcName = rpcName;
         this.numParameters = numParameters;
         this.parameterTypes = parameterTypes;
         this.parameters = parameters;
         this.returnType = returnType;
+        this.uniqueID = UUID.randomUUID();
     }
 
     public String getName() {
@@ -29,12 +34,16 @@ class RPCRegistry implements Serializable {
         return numParameters;
     }
 
-    public Object[] getParameters() {
+    public ArrayList<Object> getParameters() {
         return parameters;
     }
 
     public Class[] getParameterTypes() {
         return parameterTypes;
+    }
+
+    public UUID getUniqueID() {
+        return uniqueID;
     }
 
     @Override
@@ -48,23 +57,23 @@ class RPCRegistry implements Serializable {
                 '}';
     }
 
-    static RPCResponse doubled(Number a) {
-        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() * 2.0);
+    static RPCResponse doubled(Number a, UUID uuid) {
+        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() * 2.0, uuid);
     }
 
-    static RPCResponse tripled(Number a) {
-        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() * 3.0);
+    static RPCResponse tripled(Number a, UUID uuid) {
+        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() * 3.0, uuid);
     }
 
-    static RPCResponse halved(Number a) {
-        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() / 2.0);
+    static RPCResponse halved(Number a, UUID uuid) {
+        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() / 2.0, uuid);
     }
 
-    static RPCResponse add(Number a, Number b) {
-        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() + b.doubleValue());
+    static RPCResponse add(Number a, Number b, UUID uuid) {
+        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() + b.doubleValue(), uuid);
     }
 
-    static RPCResponse squareRoot(Number a) {
-        return new RPCResponse(Status.SUCCEEDED, Math.sqrt(a.doubleValue()));
+    static RPCResponse squareRoot(Number a, UUID uuid) {
+        return new RPCResponse(Status.SUCCEEDED, Math.sqrt(a.doubleValue()), uuid);
     }
 }

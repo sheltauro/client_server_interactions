@@ -10,6 +10,6 @@ This project is implemented in Java.
 - [x] Handle multithreading.
 - [x] Return all requests with the same (status + result) response.
   - [x] Client should be able to read the status + result.
-- [ ] Create a future/callback function.
+- [x] Create a future/callback function.
 
 

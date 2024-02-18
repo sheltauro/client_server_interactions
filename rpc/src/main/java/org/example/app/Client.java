@@ -2,6 +2,8 @@ package org.example.app;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
 
@@ -15,8 +17,9 @@ public class Client {
                 for (int i = 1; i < strings.length; i++) {
                     numbers[i - 1] = Double.parseDouble(strings[i]);
                 }
-                out.writeObject(RPCUtils.callMethod(strings[0], numbers));
-                out.flush();
+                AsyncResponse asyncResponse = RPCUtils.callFunction(out, strings[0], (Object[]) numbers);
+                RPCResponse response = asyncResponse.getResponse();
+                System.out.println(response.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -25,11 +28,13 @@ public class Client {
 
     // Test the RPCRegistry class.
     static void testRPCRegistry(ObjectInputStream in, ObjectOutputStream out) {
+        ArrayList<Object> parameters = new ArrayList<>();
+        parameters.add(2.0);
         RPCRegistry rpcRegistry = new RPCRegistry(
                 "doubled",
                 1,
                 new Class[]{Number.class},
-                new Object[]{2.0},
+                parameters,
                 RPCResponse.class.getName()
         );
 
@@ -37,7 +42,7 @@ public class Client {
             out.writeObject(rpcRegistry);
             out.flush();
             RPCResponse response = (RPCResponse) in.readObject();
-            assert (response.equals(
+            assert (response.toString().equals(
                     new RPCResponse(Status.SUCCEEDED, 4.0).toString()));
             System.out.println("Test 1 passed");
         } catch (Exception e) {
@@ -50,7 +55,6 @@ public class Client {
                 Socket socket = new Socket("localhost", 8080);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-//                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         ) {
             String mode = "interactive";
