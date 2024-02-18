@@ -3,7 +3,7 @@ package org.example.app;
 import java.io.Serializable;
 
 class RPCRegistry implements Serializable {
-    private String name;
+    private String rpcName;
 
     private int numParameters;
 
@@ -13,8 +13,8 @@ class RPCRegistry implements Serializable {
 
     private String returnType;
 
-    RPCRegistry(String name, int numParameters, Class[] parameterTypes, Object[] parameters, String returnType) {
-        this.name = name;
+    RPCRegistry(String rpcName, int numParameters, Class[] parameterTypes, Object[] parameters, String returnType) {
+        this.rpcName = rpcName;
         this.numParameters = numParameters;
         this.parameterTypes = parameterTypes;
         this.parameters = parameters;
@@ -22,7 +22,7 @@ class RPCRegistry implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return rpcName;
     }
 
     public int getNumParameters() {
@@ -39,9 +39,10 @@ class RPCRegistry implements Serializable {
 
     @Override
     public String toString() {
-        return "RunFunction{" +
-                "name='" + name + '\'' +
+        return "RPCRegistry{" +
+                "rpcName='" + rpcName + '\'' +
                 ", numParameters=" + numParameters +
+                ", parameterTypes=" + parameterTypes +
                 ", parameters=" + parameters +
                 ", returnType='" + returnType + '\'' +
                 '}';

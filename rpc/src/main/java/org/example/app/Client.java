@@ -40,7 +40,7 @@ public class Client {
     }
 
     // Verify that a method exists in the RPCRegistry class.
-    static Class[] verifyMethodExists(String name, Object... parameters) {
+    static Class[] verifyMethodExists(String methodName, Object... parameters) {
         Class<RPCRegistry> cls = RPCRegistry.class;
         try {
             Class[] parameterTypes = new Class[parameters.length];
@@ -53,7 +53,7 @@ public class Client {
                     parameterTypes[i] = parameters[i].getClass();
                 }
             }
-            cls.getDeclaredMethod(name, parameterTypes);
+            cls.getDeclaredMethod(methodName, parameterTypes);
             return parameterTypes;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -62,11 +62,11 @@ public class Client {
     }
 
     // Create an RPCRegistry object.
-    static RPCRegistry callMethod(String name, Object... parameters) {
-        Class[] parameterTypes = verifyMethodExists(name, parameters);
+    static RPCRegistry callMethod(String methodName, Object... parameters) {
+        Class[] parameterTypes = verifyMethodExists(methodName, parameters);
 
         return new RPCRegistry(
-                name,
+                methodName,
                 parameters.length,
                 parameterTypes,
                 new ArrayList<>(List.of(parameters)).toArray(),

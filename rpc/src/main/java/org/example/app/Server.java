@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class Server {
 
@@ -26,7 +25,7 @@ public class Server {
         RPCResponse response;
         try {
             // Reflection code.
-            Class<?> cls = Class.forName("org.example.app.RPCRegistry");
+            Class<?> cls = RPCRegistry.class;
 
             Method method = cls.getDeclaredMethod(registry.getName(), registry.getParameterTypes());
             response = (RPCResponse) method.invoke(null, registry.getParameters());
@@ -49,13 +48,10 @@ public class Server {
             sendMessagesToClient(stdin, out);
 
             // Create a thread pool to handle incoming requests.
-            ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory() {
-                @Override
-                public Thread newThread(Runnable r) {
-                    Thread thread = new Thread(r);
-                    thread.setDaemon(true);
-                    return thread;
-                }
+            ExecutorService executorService = Executors.newCachedThreadPool(r -> {
+                Thread thread = new Thread(r);
+                thread.setDaemon(true);
+                return thread;
             });
 
             executorService.submit(() -> {
