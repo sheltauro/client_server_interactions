@@ -21,7 +21,7 @@ public class Server {
         }).start();
     }
 
-    static void doReflection(RPCRegistry registry, PrintWriter out) {
+    static void doReflection(RPCRegistry registry, ObjectOutputStream out) {
         RPCResponse response;
         try {
             // Reflection code.
@@ -29,11 +29,14 @@ public class Server {
 
             Method method = cls.getDeclaredMethod(registry.getName(), registry.getParameterTypes());
             response = (RPCResponse) method.invoke(null, registry.getParameters());
-            out.println(response);
+            out.writeObject(response);
         } catch (Exception e) {
             e.printStackTrace();
-            out.println(e.getMessage());
-            out.println("error");
+            try {
+                out.writeObject(new RPCResponse(Status.FAILED, 0.0, e.getMessage()));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
         }
     }
 
@@ -41,11 +44,12 @@ public class Server {
         try (
                 ServerSocket serverSocket = new ServerSocket(8080);
                 Socket clientSocket = serverSocket.accept();
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                PrintWriter out1 = new PrintWriter(clientSocket.getOutputStream(), true);
+                ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
                 BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         ) {
-            sendMessagesToClient(stdin, out);
+            sendMessagesToClient(stdin, out1);
 
             // Create a thread pool to handle incoming requests.
             ExecutorService executorService = Executors.newCachedThreadPool(r -> {

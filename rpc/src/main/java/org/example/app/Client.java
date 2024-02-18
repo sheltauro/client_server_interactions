@@ -2,24 +2,8 @@ package org.example.app;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Client {
-
-    // Read the server's response.
-    static void readServerResponse(BufferedReader in) {
-        new Thread(() -> {
-            String inputLine;
-            try {
-                while ((inputLine = in.readLine()) != null) {
-                    System.out.println("echo: " + inputLine);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
 
     // Read user input and send it to the server.
     static void userInput(BufferedReader stdin, ObjectOutputStream out) {
@@ -31,7 +15,7 @@ public class Client {
                 for (int i = 1; i < strings.length; i++) {
                     numbers[i - 1] = Double.parseDouble(strings[i]);
                 }
-                out.writeObject(callMethod(strings[0], numbers));
+                out.writeObject(RPCUtils.callMethod(strings[0], numbers));
                 out.flush();
             }
         } catch (Exception e) {
@@ -39,43 +23,8 @@ public class Client {
         }
     }
 
-    // Verify that a method exists in the RPCRegistry class.
-    static Class[] verifyMethodExists(String methodName, Object... parameters) {
-        Class<RPCRegistry> cls = RPCRegistry.class;
-        try {
-            Class[] parameterTypes = new Class[parameters.length];
-            for (int i = 0; i < parameters.length; i++) {
-                if (parameters[i] instanceof Number) {
-                    parameterTypes[i] = Number.class;
-                } else if (parameters[i] instanceof String) {
-                    parameterTypes[i] = String.class;
-                } else {
-                    parameterTypes[i] = parameters[i].getClass();
-                }
-            }
-            cls.getDeclaredMethod(methodName, parameterTypes);
-            return parameterTypes;
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // Create an RPCRegistry object.
-    static RPCRegistry callMethod(String methodName, Object... parameters) {
-        Class[] parameterTypes = verifyMethodExists(methodName, parameters);
-
-        return new RPCRegistry(
-                methodName,
-                parameters.length,
-                parameterTypes,
-                new ArrayList<>(List.of(parameters)).toArray(),
-                RPCResponse.class.getName()
-        );
-    }
-
     // Test the RPCRegistry class.
-    static void testRPCRegistry(BufferedReader in, ObjectOutputStream out) {
+    static void testRPCRegistry(ObjectInputStream in, ObjectOutputStream out) {
         RPCRegistry rpcRegistry = new RPCRegistry(
                 "doubled",
                 1,
@@ -87,10 +36,11 @@ public class Client {
         try {
             out.writeObject(rpcRegistry);
             out.flush();
-            assert (in.readLine().equals(
+            RPCResponse response = (RPCResponse) in.readObject();
+            assert (response.equals(
                     new RPCResponse(Status.SUCCEEDED, 4.0).toString()));
             System.out.println("Test 1 passed");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -99,7 +49,8 @@ public class Client {
         try (
                 Socket socket = new Socket("localhost", 8080);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+//                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         ) {
             String mode = "interactive";
@@ -107,7 +58,7 @@ public class Client {
             // Switch between interactive and test mode.
             switch (mode) {
                 case "interactive" -> {
-                    readServerResponse(in);
+                    RPCUtils.readServerResponse(in);
                     userInput(stdin, out);
                 }
                 case "test" -> testRPCRegistry(in, out);
