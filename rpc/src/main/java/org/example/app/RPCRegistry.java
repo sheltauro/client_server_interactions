@@ -1,20 +1,22 @@
 package org.example.app;
 
 import java.io.Serializable;
-import java.util.List;
 
 class RPCRegistry implements Serializable {
     private String name;
 
     private int numParameters;
 
-    private List<Object> parameters;
+    private Class[] parameterTypes;
+
+    private Object[] parameters;
 
     private String returnType;
 
-    RPCRegistry(String name, int numParameters, List<Object> parameters, String returnType) {
+    RPCRegistry(String name, int numParameters, Class[] parameterTypes, Object[] parameters, String returnType) {
         this.name = name;
         this.numParameters = numParameters;
+        this.parameterTypes = parameterTypes;
         this.parameters = parameters;
         this.returnType = returnType;
     }
@@ -27,8 +29,12 @@ class RPCRegistry implements Serializable {
         return numParameters;
     }
 
-    public List<Object> getParameters() {
+    public Object[] getParameters() {
         return parameters;
+    }
+
+    public Class[] getParameterTypes() {
+        return parameterTypes;
     }
 
     @Override
@@ -41,15 +47,23 @@ class RPCRegistry implements Serializable {
                 '}';
     }
 
-    static <T extends Number> double doubled(T a) {
-        return a.doubleValue() * 2.0;
+    static RPCResponse doubled(Number a) {
+        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() * 2.0);
     }
 
-    static <T extends Number> double tripled(T a) {
-        return a.doubleValue() * 3.0;
+    static RPCResponse tripled(Number a) {
+        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() * 3.0);
     }
 
-    static <T extends Number> double halved(T a) {
-        return a.doubleValue() / 2.0;
+    static RPCResponse halved(Number a) {
+        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() / 2.0);
+    }
+
+    static RPCResponse add(Number a, Number b) {
+        return new RPCResponse(Status.SUCCEEDED, a.doubleValue() + b.doubleValue());
+    }
+
+    static RPCResponse squareRoot(Number a) {
+        return new RPCResponse(Status.SUCCEEDED, Math.sqrt(a.doubleValue()));
     }
 }

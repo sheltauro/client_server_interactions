@@ -23,19 +23,17 @@ public class Server {
     }
 
     static void doReflection(RPCRegistry registry, PrintWriter out) {
-        double result = 0.0;
+        RPCResponse response;
         try {
             // Reflection code.
             Class<?> cls = Class.forName("org.example.app.RPCRegistry");
 
-            Method method = cls.getDeclaredMethod(registry.getName(), Number.class);
-            result = Double.parseDouble(
-                    String.valueOf(
-                            method.invoke(null, (Number) registry.getParameters().get(0))
-                    )
-            );
-            out.println(result);
+            Method method = cls.getDeclaredMethod(registry.getName(), registry.getParameterTypes());
+            response = (RPCResponse) method.invoke(null, registry.getParameters());
+            out.println(response);
         } catch (Exception e) {
+            e.printStackTrace();
+            out.println(e.getMessage());
             out.println("error");
         }
     }

@@ -8,6 +8,7 @@ This project is implemented in Java.
   - [x] Implement TCP using protos to pass objects.
   - [x] Implement method reflection.
 - [x] Handle multithreading.
-- [ ] Return all requests with the same (status + result) response.
+- [x] Return all requests with the same (status + result) response.
+  - [x] Client should be able to read the status + result.
 
 
