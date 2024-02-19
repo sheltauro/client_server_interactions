@@ -12,7 +12,12 @@ The result is returned as an AsyncResponse which is similar to a future.
 - [x] Return all requests with the same (status + result) response.
   - [x] Client should be able to read the status + result.
 - [x] Create a future/callback function.
+- [ ] Add more abstractions for the user.
+- [ ] Create V0 documentation.
 
+
+## Ideas to improve this
+- [ ] If the server is overloaded, buffer requests on the client itself.
+- [ ] Create an RPC client/server stub for more clarity.
 - [ ] Send heartbeats from client to server, to check if the server is up.
-
 
