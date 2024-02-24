@@ -43,7 +43,6 @@ public class ServerHandler implements Runnable {
                 RPCRegistry registry = (RPCRegistry) in.readObject();
                 System.out.println("Received request: " + registry);
                 RPCUtils.submitTask(pool, registry, out);
-                pool.submit(() -> RPCUtils.doReflection(registry, out));
             } catch (Exception e) {
                 e.printStackTrace();
                 break;

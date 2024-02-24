@@ -23,6 +23,7 @@ public class RPCUtils {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    break;
                 }
             }
         }).start();
@@ -132,6 +133,7 @@ public class RPCUtils {
 
             ArrayList<Object> parameters = registry.getParameters();
             parameters.add(uniqueID);
+            System.out.println(parameters.size());
             response = (RPCResponse) method.invoke(null, parameters.toArray());
             out.writeObject(response);
         } catch (Exception e) {

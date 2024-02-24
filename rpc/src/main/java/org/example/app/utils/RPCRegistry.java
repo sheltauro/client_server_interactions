@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class RPCRegistry implements Serializable {
-    private String rpcName;
+    private final String rpcName;
 
     private int numParameters;
 
