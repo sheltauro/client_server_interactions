@@ -1,6 +1,4 @@
-package org.example.app;
-
-import java.util.UUID;
+package org.example.app.utils;
 
 public class AsyncResponse {
 

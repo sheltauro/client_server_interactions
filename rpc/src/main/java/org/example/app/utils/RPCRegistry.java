@@ -1,10 +1,10 @@
-package org.example.app;
+package org.example.app.utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-class RPCRegistry implements Serializable {
+public class RPCRegistry implements Serializable {
     private String rpcName;
 
     private int numParameters;
@@ -17,7 +17,7 @@ class RPCRegistry implements Serializable {
 
     private UUID uniqueID;
 
-    RPCRegistry(String rpcName, int numParameters, Class[] parameterTypes, ArrayList<Object> parameters, String returnType) {
+    public RPCRegistry(String rpcName, int numParameters, Class[] parameterTypes, ArrayList<Object> parameters, String returnType) {
         this.rpcName = rpcName;
         this.numParameters = numParameters;
         this.parameterTypes = parameterTypes;
@@ -57,11 +57,13 @@ class RPCRegistry implements Serializable {
                 '}';
     }
 
-    static RPCResponse doubled(Number a, UUID uuid) {
+    static RPCResponse doubled(Number a, UUID uuid) throws InterruptedException {
+        Thread.sleep(10000);
         return new RPCResponse(RPCStatus.SUCCEEDED, a.doubleValue() * 2.0, uuid);
     }
 
-    static RPCResponse tripled(Number a, UUID uuid) {
+    static RPCResponse tripled(Number a, UUID uuid) throws InterruptedException {
+        Thread.sleep(3000);
         return new RPCResponse(RPCStatus.SUCCEEDED, a.doubleValue() * 3.0, uuid);
     }
 

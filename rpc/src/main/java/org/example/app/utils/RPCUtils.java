@@ -1,17 +1,18 @@
-package org.example.app;
+package org.example.app.utils;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 public class RPCUtils {
 
     private static final AsyncResponseMemoryStore asyncResponseMemoryStore = new AsyncResponseMemoryStore();
 
     // Read the server's response.
-    static void readServerResponse(ObjectInputStream in) {
+    public static void readServerResponse(ObjectInputStream in) {
         new Thread(() -> {
             while (true) {
                 RPCResponse rpcResponse;
@@ -66,7 +67,7 @@ public class RPCUtils {
         );
     }
 
-    static AsyncResponse callFunction(ObjectOutputStream out, String methodName, Object... parameters) {
+    public static AsyncResponse callFunction(ObjectOutputStream out, String methodName, Object... parameters) {
         AsyncResponse asyncResponse = null;
         try {
             RPCRegistry registry = callMethod(methodName, parameters);
@@ -83,5 +84,68 @@ public class RPCUtils {
             e.printStackTrace();
         }
         return asyncResponse;
+    }
+
+    static void printResponse(String name, RPCResponse response, Object... parameters) {
+        System.out.printf("%s(", name);
+        for (int i = 0; i < parameters.length; i++) {
+            System.out.print(parameters[i]);
+            if (i < parameters.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.printf("): %s\n", response.toString());
+    }
+
+    public static void readResponseInAnotherThread(String name, AsyncResponse asyncResponse, Object...  parameters) {
+        new Thread(() -> {
+            try {
+                RPCResponse response = asyncResponse.getResponse();
+                printResponse(name, response, parameters);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    static void sendMessagesToClient(BufferedReader stdin, PrintWriter out) {
+        new Thread(() -> {
+            String userInput;
+            try {
+                while ((userInput = stdin.readLine()) != null) {
+                    out.println(userInput);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public static void doReflection(RPCRegistry registry, ObjectOutputStream out) {
+        RPCResponse response;
+        UUID uniqueID = registry.getUniqueID();
+        try {
+            // Reflection code.
+            Class<?> cls = RPCRegistry.class;
+
+            Method method = cls.getDeclaredMethod(registry.getName(), registry.getParameterTypes());
+
+            ArrayList<Object> parameters = registry.getParameters();
+            parameters.add(uniqueID);
+            response = (RPCResponse) method.invoke(null, parameters.toArray());
+            out.writeObject(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                out.writeObject(new RPCResponse(RPCStatus.FAILED, 0.0, e.getMessage(), uniqueID));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+    }
+
+    public static void submitTask(ExecutorService executorService, RPCRegistry registry, ObjectOutputStream out) {
+        executorService.submit(() -> doReflection(registry, out));
+        System.out.println("Submitted request to thread pool");
     }
 }

@@ -1,4 +1,4 @@
-package org.example.app;
+package org.example.app.utils;
 
 import java.io.Serializable;
 import java.util.UUID;

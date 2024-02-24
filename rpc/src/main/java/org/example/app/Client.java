@@ -1,5 +1,7 @@
 package org.example.app;
 
+import org.example.app.utils.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -17,8 +19,7 @@ public class Client {
                     numbers[i - 1] = Double.parseDouble(strings[i]);
                 }
                 AsyncResponse asyncResponse = RPCUtils.callFunction(out, strings[0], (Object[]) numbers);
-                RPCResponse response = asyncResponse.getResponse();
-                System.out.println(response.toString());
+                RPCUtils.readResponseInAnotherThread(strings[0],asyncResponse, (Object[]) numbers);
             }
         } catch (Exception e) {
             e.printStackTrace();

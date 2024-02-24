@@ -1,4 +1,4 @@
-package org.example.app;
+package org.example.app.utils;
 
 import java.util.HashMap;
 import java.util.UUID;
