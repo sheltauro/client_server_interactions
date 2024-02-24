@@ -78,4 +78,8 @@ public class RPCRegistry implements Serializable {
     static RPCResponse squareRoot(Number a, UUID uuid) {
         return new RPCResponse(RPCStatus.SUCCEEDED, Math.sqrt(a.doubleValue()), uuid);
     }
+
+    static RPCResponse heartbeat(UUID uuid) {
+        return new RPCResponse(RPCStatus.SUCCEEDED, "I'm alive", uuid);
+    }
 }

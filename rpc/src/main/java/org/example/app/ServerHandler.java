@@ -8,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ServerHandler implements Runnable {
 
@@ -25,11 +24,7 @@ public class ServerHandler implements Runnable {
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
-            pool = Executors.newCachedThreadPool(r -> {
-                Thread thread = new Thread(r);
-                thread.setDaemon(true);
-                return thread;
-            });
+            pool = RPCUtils.createCachedThreadPool();
         } catch (IOException e) {
             e.printStackTrace();
         }

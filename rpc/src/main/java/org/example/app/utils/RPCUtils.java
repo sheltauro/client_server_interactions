@@ -6,10 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RPCUtils {
 
     private static final AsyncResponseMemoryStore asyncResponseMemoryStore = new AsyncResponseMemoryStore();
+
+    public static ExecutorService createCachedThreadPool() {
+        return Executors.newCachedThreadPool(r -> {
+            Thread thread = new Thread(r);
+            thread.setDaemon(true);
+            return thread;
+        });
+    }
 
     // Read the server's response.
     public static void readServerResponse(ObjectInputStream in) {
@@ -21,6 +30,22 @@ public class RPCUtils {
                         rpcResponse = (RPCResponse) in.readObject();
                         asyncResponseMemoryStore.updateAsyncResponse(rpcResponse);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    break;
+                }
+            }
+        }).start();
+    }
+
+    // New thread that sends heartbeat messages to the server every 5 seconds.
+    public static void sendHeartbeatMessages(ExecutorService pool, ObjectOutputStream out) {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(5000);
+                    AsyncResponse response = RPCUtils.callFunction(out, "heartbeat");
+                    pool.submit(() -> RPCUtils.readResponse("heartbeat", response));
                 } catch (Exception e) {
                     e.printStackTrace();
                     break;
@@ -98,15 +123,14 @@ public class RPCUtils {
         System.out.printf("): %s\n", response.toString());
     }
 
-    public static void readResponseInAnotherThread(String name, AsyncResponse asyncResponse, Object...  parameters) {
-        new Thread(() -> {
-            try {
-                RPCResponse response = asyncResponse.getResponse();
-                printResponse(name, response, parameters);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+    public static void readResponse(String name, AsyncResponse asyncResponse, Object... parameters) {
+        try {
+            RPCResponse response = asyncResponse.getResponse();
+            printResponse(name, response, parameters);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     static void sendMessagesToClient(BufferedReader stdin, PrintWriter out) {
@@ -133,7 +157,6 @@ public class RPCUtils {
 
             ArrayList<Object> parameters = registry.getParameters();
             parameters.add(uniqueID);
-            System.out.println(parameters.size());
             response = (RPCResponse) method.invoke(null, parameters.toArray());
             out.writeObject(response);
         } catch (Exception e) {

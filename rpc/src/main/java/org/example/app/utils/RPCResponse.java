@@ -6,33 +6,33 @@ import java.util.UUID;
 public class RPCResponse implements Serializable {
     private RPCStatus status;
 
-    private Number response;
+    private Object response;
 
     private String errorMessage;
 
     private UUID uuid;
 
     // Only for testing.
-    public RPCResponse(RPCStatus status, Number result) {
+    public RPCResponse(RPCStatus status, Object result) {
         this.status = status;
         this.response = result;
         this.errorMessage = "";
     }
 
-    public RPCResponse(RPCStatus status, Number result, UUID uuid) {
+    public RPCResponse(RPCStatus status, Object result, UUID uuid) {
         this.status = status;
         this.response = result;
         this.errorMessage = "";
         this.uuid = uuid;
     }
 
-    public RPCResponse(RPCStatus status, Number result, String errorMessage) {
+    public RPCResponse(RPCStatus status, Object result, String errorMessage) {
         this.status = status;
         this.response = result;
         this.errorMessage = errorMessage;
     }
 
-    public RPCResponse(RPCStatus status, Number result, String errorMessage, UUID uuid) {
+    public RPCResponse(RPCStatus status, Object result, String errorMessage, UUID uuid) {
         this.status = status;
         this.response = result;
         this.errorMessage = errorMessage;
@@ -43,7 +43,7 @@ public class RPCResponse implements Serializable {
         return status;
     }
 
-    public Number getResponse() {
+    public Object getResponse() {
         return response;
     }
 

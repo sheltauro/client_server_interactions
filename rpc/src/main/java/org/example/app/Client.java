@@ -5,11 +5,12 @@ import org.example.app.utils.*;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
 
 public class Client {
 
     // Read user input and send it to the server.
-    static void userInput(BufferedReader stdin, ObjectOutputStream out) {
+    static void userInput(ExecutorService pool, BufferedReader stdin, ObjectOutputStream out) {
         try {
             String userInput;
             while ((userInput = stdin.readLine()) != null) {
@@ -19,7 +20,7 @@ public class Client {
                     numbers[i - 1] = Double.parseDouble(strings[i]);
                 }
                 AsyncResponse asyncResponse = RPCUtils.callFunction(out, strings[0], (Object[]) numbers);
-                RPCUtils.readResponseInAnotherThread(strings[0],asyncResponse, (Object[]) numbers);
+                pool.submit(() -> RPCUtils.readResponse(strings[0], asyncResponse, (Object[]) numbers));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,13 +58,15 @@ public class Client {
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
         ) {
+            ExecutorService pool = RPCUtils.createCachedThreadPool();
             String mode = "interactive";
 
             // Switch between interactive and test mode.
             switch (mode) {
                 case "interactive" -> {
                     RPCUtils.readServerResponse(in);
-                    userInput(stdin, out);
+                    RPCUtils.sendHeartbeatMessages(pool, out);
+                    userInput(pool, stdin, out);
                 }
                 case "test" -> testRPCRegistry(in, out);
                 default -> throw new IllegalArgumentException("Invalid mode: " + mode);

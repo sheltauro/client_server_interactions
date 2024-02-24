@@ -12,7 +12,7 @@ The result is returned as an AsyncResponse which is similar to a future.
 - [x] Return all requests with the same (status + result) response.
   - [x] Client should be able to read the status + result.
 - [x] Create a future/callback function.
-- [ ] Add more abstractions for the user.
+- [x] Add more abstractions for the user.
 - [ ] Create V0 documentation.
 
 
