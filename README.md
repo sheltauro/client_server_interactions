@@ -28,7 +28,10 @@ The initial goal is to implement the current format as-is and then improve on it
 
 ### Tasks
 - [x] Read about the proto and thrift format.
-- [ ] Write data in bytes to local.
-- [ ] Encode and decode simple formats like int, string, floats to local.
+- [x] Write data in bytes to local.
+- [x] Encode and decode simple formats like int, string, floats to local.
 - [ ] Encode and decode class without nesting to local.
+- [ ] Read Antlr and create a lexer / parser.
+- [ ] Encode and decode class with nesting to local.
+- [ ] V0 - Optimise the encoding and decoding process.
 - [ ] Create a benchmarking library.
