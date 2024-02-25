@@ -2,8 +2,8 @@
 The RPC module allows you to execute any function on a remote server.
 The result is returned as an AsyncResponse which is similar to a future.
 
-
-## Task Notes
+## RPC
+### Task Notes
 - [x] Compile and run java code locally.
 - [x] Implement RPC using TCP.
   - [x] Implement TCP using protos to pass objects.
@@ -18,7 +18,17 @@ The result is returned as an AsyncResponse which is similar to a future.
 - [ ] Create V0 documentation.
 
 
-## Ideas to improve this
+### Ideas to improve this
 - [ ] If the server is overloaded, buffer requests on the client itself.
 - [ ] Create an RPC client/server stub for more clarity.
 
+## Proto
+The proto module allows you to encode data and convert it to a compressed format.
+The initial goal is to implement the current format as-is and then improve on it maybe.
+
+### Tasks
+- [ ] Read about the proto format.
+- [ ] Write data in bytes to local.
+- [ ] Encode and decode simple formats like int, string, floats to local.
+- [ ] Encode and decode class without nesting to local.
+- [ ] Create a benchmarking library.
