@@ -1,0 +1,12 @@
+ParserParser$MessageRestContext.class
+ParserLexer.class
+ParserParser$MessageBodyContext.class
+ParserVisitor.class
+ParserParser$TypeContext.class
+ParserParser$LabelContext.class
+ParserListener.class
+ParserBaseVisitor.class
+ParserBaseListener.class
+ParserParser$FieldContext.class
+ParserParser.class
+ParserParser$ProgramContext.class

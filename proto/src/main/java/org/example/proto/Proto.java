@@ -61,31 +61,33 @@ public class Proto {
 //            }
 //        }
 
-        String s = "spaces !!dude";
-        if (!s.equals(Decoder.decodeString(Encoder.encodeString(s)))) {
-            System.out.println("error");
-        }
+//        String s = "spaces !!dude";
+//        if (!s.equals(Decoder.decodeString(Encoder.encodeString(s)))) {
+//            System.out.println("error");
+//        }
+//
+//        for (float i = 0.0f; i < 10000f; i += 0.99) {
+//            if (i != Decoder.decodeFloat(Encoder.encodeFloat(i))) {
+//                System.out.println("error");
+//                break;
+//            }
+//        }
+//
+//        for (double i = 0.0; i < 10000.0; i += 0.99) {
+//            if (i != Decoder.decodeDouble(Encoder.encodeDouble(i))) {
+//                System.out.println("error");
+//                break;
+//            }
+//        }
+//
+//        if (true != Decoder.decodeBoolean(Encoder.encodeBoolean(true))) {
+//            System.out.println("error");
+//        }
+//        if (false != Decoder.decodeBoolean(Encoder.encodeBoolean(false))) {
+//            System.out.println("error");
+//        }
 
-        for (float i = 0.0f; i < 10000f; i += 0.99) {
-            if (i != Decoder.decodeFloat(Encoder.encodeFloat(i))) {
-                System.out.println("error");
-                break;
-            }
-        }
-
-        for (double i = 0.0; i < 10000.0; i += 0.99) {
-            if (i != Decoder.decodeDouble(Encoder.encodeDouble(i))) {
-                System.out.println("error");
-                break;
-            }
-        }
-
-
-        if (true != Decoder.decodeBoolean(Encoder.encodeBoolean(true))) {
-            System.out.println("error");
-        }
-        if (false != Decoder.decodeBoolean(Encoder.encodeBoolean(false))) {
-            System.out.println("error");
-        }
+        Tennis t = new Tennis("Sheldon", 10, 10.0, new String[]{"Sheldon", "Tauro"});
+        System.out.println(t.toString());
     }
 }
