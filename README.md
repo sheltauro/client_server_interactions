@@ -27,7 +27,7 @@ The proto module allows you to encode data and convert it to a compressed format
 The initial goal is to implement the current format as-is and then improve on it maybe.
 
 ### Tasks
-- [ ] Read about the proto format.
+- [x] Read about the proto and thrift format.
 - [ ] Write data in bytes to local.
 - [ ] Encode and decode simple formats like int, string, floats to local.
 - [ ] Encode and decode class without nesting to local.
