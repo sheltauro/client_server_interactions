@@ -30,6 +30,7 @@ The initial goal is to implement the current format as-is and then improve on it
 - [x] Read about the proto and thrift format.
 - [x] Write data in bytes to local.
 - [x] Encode and decode simple formats like int, string, floats to local.
+- [ ] Write a few pager on how to create a class from proto schema.
 - [ ] Encode and decode class without nesting to local.
 - [ ] Read Antlr and create a lexer / parser.
 - [ ] Encode and decode class with nesting to local.
